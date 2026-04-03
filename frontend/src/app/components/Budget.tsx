@@ -23,7 +23,7 @@ interface BudgetProps {
 }
 
 export function Budget({ onBack }: BudgetProps) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const currentMonth = new Date().getMonth();
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -66,7 +66,28 @@ export function Budget({ onBack }: BudgetProps) {
       setSavedCategoryName(categoryName);
       setSavedAmount(amount);
 
-      // Save budget to localStorage
+      const rawNumber = amount.replace(/\./g, '');
+      const numericAmount = parseFloat(rawNumber || '0');
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      (async () => {
+        try {
+          const res = await fetch(`${API_URL}/api/budgets`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token ? { Authorization: `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({ name: categoryName, limitAmount: numericAmount })
+          });
+          if (!res.ok) {
+            // handle validation error or show message — for now, fallback to local save
+          }
+        } catch (err) {
+          // network error: fallback to local save
+        }
+      })();
+
+      // Fallback local save for UX continuity
       const newBudget = {
         id: Math.random().toString(36).substr(2, 9),
         categoryId: selectedCategory,

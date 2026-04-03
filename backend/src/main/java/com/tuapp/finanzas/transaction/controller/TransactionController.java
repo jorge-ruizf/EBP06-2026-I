@@ -1,6 +1,7 @@
 package com.tuapp.finanzas.transaction.controller;
 
 import com.tuapp.finanzas.transaction.dto.TransactionDto;
+import jakarta.validation.Valid;
 import com.tuapp.finanzas.transaction.service.TransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDto> create(@RequestBody TransactionDto dto) {
+    public ResponseEntity<TransactionDto> create(@Valid @RequestBody TransactionDto dto) {
         return ResponseEntity.ok(transactionService.create(dto));
     }
 }

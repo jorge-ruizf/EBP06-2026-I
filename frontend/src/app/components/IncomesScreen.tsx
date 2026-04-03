@@ -41,18 +41,46 @@ interface IncomesScreenProps {
 }
 
 export function IncomesScreen({ onNavigate, onCreateIncome }: IncomesScreenProps) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [incomes, setIncomes] = useState<Income[]>([]);
 
   useEffect(() => {
-    if (user) {
-      const allIncomes = JSON.parse(localStorage.getItem('incomes') || '[]');
-      const userIncomes = allIncomes.filter((i: Income) => i.userId === user.id);
-      // Sort by date descending
-      userIncomes.sort((a: Income, b: Income) => new Date(b.date).getTime() - new Date(a.date).getTime());
-      setIncomes(userIncomes);
-    }
-  }, [user]);
+    const load = async () => {
+      if (!user) return setIncomes([]);
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      try {
+        const res = await fetch(`${API_URL}/api/transactions`, {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (!res.ok) throw new Error('Failed to fetch');
+        const data = await res.json();
+        // Filter by current user
+        const userIncomes = (data || []).filter((t: any) => String(t.userId) === String(user.id));
+        // Map to UI shape and sort by date desc
+        const mapped = userIncomes.map((t: any) => ({
+          id: String(t.id),
+          date: t.date || new Date().toISOString().slice(0,10),
+          categoryId: t.categoryId ? String(t.categoryId) : 'other',
+          categoryName: t.categoryName || 'Otros',
+          description: t.description || '',
+          amount: t.amount ? String(t.amount) : '0',
+          userId: String(t.userId || '')
+        }));
+        mapped.sort((a: Income, b: Income) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setIncomes(mapped);
+      } catch (err) {
+        // Fallback to localStorage
+        const allIncomes = JSON.parse(localStorage.getItem('incomes') || '[]');
+        const userIncomes = allIncomes.filter((i: Income) => String(i.userId) === String(user.id));
+        userIncomes.sort((a: Income, b: Income) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setIncomes(userIncomes);
+      }
+    };
+    load();
+  }, [user, token]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

@@ -20,7 +20,12 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public BudgetDto create(BudgetDto dto) {
-        Budget b = Budget.builder().name(dto.getName()).limitAmount(dto.getLimitAmount()).build();
+        if (dto.getLimitAmount() == null || dto.getLimitAmount().doubleValue() <= 0) {
+            throw new IllegalArgumentException("limitAmount must be greater than zero");
+        }
+        Budget b = new Budget();
+        b.setName(dto.getName());
+        b.setLimitAmount(dto.getLimitAmount());
         Budget saved = budgetRepository.save(b);
         return toDto(saved);
     }
@@ -36,6 +41,6 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     private BudgetDto toDto(Budget b) {
-        return BudgetDto.builder().id(b.getId()).name(b.getName()).limitAmount(b.getLimitAmount()).build();
+        return new BudgetDto(b.getId(), b.getName(), b.getLimitAmount());
     }
 }

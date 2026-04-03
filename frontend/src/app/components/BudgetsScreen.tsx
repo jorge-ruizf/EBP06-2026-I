@@ -45,16 +45,41 @@ interface BudgetsScreenProps {
 }
 
 export function BudgetsScreen({ onNavigate, onCreateBudget }: BudgetsScreenProps) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [budgets, setBudgets] = useState<Budget[]>([]);
 
   useEffect(() => {
-    if (user) {
-      const allBudgets = JSON.parse(localStorage.getItem('budgets') || '[]');
-      const userBudgets = allBudgets.filter((b: Budget) => b.userId === user.id);
-      setBudgets(userBudgets);
-    }
-  }, [user]);
+    const load = async () => {
+      if (!user) return setBudgets([]);
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      try {
+        const res = await fetch(`${API_URL}/api/budgets`, {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+        if (!res.ok) throw new Error('Failed to fetch budgets');
+        const data = await res.json();
+        // Map data to UI shape. BudgetDto is { id, name, limitAmount }
+        const mapped = (data || []).map((b: any) => ({
+          id: String(b.id),
+          categoryId: 'other',
+          categoryName: b.name || 'Otros',
+          amount: b.limitAmount ? String(b.limitAmount) : '0',
+          month: new Date().getMonth(),
+          userId: ''
+        }));
+        setBudgets(mapped);
+      } catch (err) {
+        // fallback to localStorage
+        const allBudgets = JSON.parse(localStorage.getItem('budgets') || '[]');
+        const userBudgets = allBudgets.filter((b: Budget) => String(b.userId) === String(user.id));
+        setBudgets(userBudgets);
+      }
+    };
+    load();
+  }, [user, token]);
 
   return (
     <SidebarLayout currentPage="budgets" onNavigate={onNavigate}>

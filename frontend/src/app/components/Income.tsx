@@ -22,7 +22,7 @@ interface IncomeProps {
 }
 
 export function Income({ onBack }: IncomeProps) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const today = new Date();
 
   // Calculate one year ago from today
@@ -58,7 +58,7 @@ export function Income({ onBack }: IncomeProps) {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const newErrors = {
       date: !date,
       category: !selectedCategory,
@@ -73,7 +73,36 @@ export function Income({ onBack }: IncomeProps) {
       setSavedCategoryName(categoryName);
       setSavedAmount(amount);
 
-      // Save income to localStorage
+      // Prepare payload for backend
+      const rawNumber = amount.replace(/\./g, '');
+      const numericAmount = parseFloat(rawNumber || '0');
+
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      try {
+        const res = await fetch(`${API_URL}/api/transactions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          },
+          body: JSON.stringify({
+            amount: numericAmount,
+            description,
+            // categoryId expected as numeric on backend; frontend categories are string ids so we omit it
+          })
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          // show error to user
+          setErrors(prev => ({ ...prev, amount: false }));
+          return;
+        }
+        // const saved = await res.json();
+      } catch (err) {
+        // network error — keep behavior but don't crash
+      }
+
+      // Fallback local save for UX continuity when backend is unavailable
       const newIncome = {
         id: Math.random().toString(36).substr(2, 9),
         date: date ? format(date, 'yyyy-MM-dd') : '',

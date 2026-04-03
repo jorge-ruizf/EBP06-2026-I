@@ -1,6 +1,7 @@
 package com.tuapp.finanzas.budget.controller;
 
 import com.tuapp.finanzas.budget.dto.BudgetDto;
+import jakarta.validation.Valid;
 import com.tuapp.finanzas.budget.service.BudgetService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class BudgetController {
     }
 
     @PostMapping
-    public ResponseEntity<BudgetDto> create(@RequestBody BudgetDto dto) {
+    public ResponseEntity<BudgetDto> create(@Valid @RequestBody BudgetDto dto) {
         return ResponseEntity.ok(budgetService.create(dto));
     }
 }

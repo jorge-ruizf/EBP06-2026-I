@@ -6,6 +6,8 @@ import com.tuapp.finanzas.transaction.repository.TransactionRepository;
 import com.tuapp.finanzas.transaction.service.TransactionService;
 import com.tuapp.finanzas.category.entity.Category;
 import com.tuapp.finanzas.user.entity.User;
+import com.tuapp.finanzas.user.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +17,11 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository) {
+    public TransactionServiceImpl(TransactionRepository transactionRepository, UserRepository userRepository) {
         this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,6 +38,12 @@ public class TransactionServiceImpl implements TransactionService {
             User u = new User();
             u.setId(dto.getUserId());
             t.setUser(u);
+        } else {
+            // try to resolve current user from security context if available
+            var auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.getName() != null) {
+                userRepository.findByUsername(auth.getName()).ifPresent(t::setUser);
+            }
         }
         Transaction saved = transactionRepository.save(t);
         return toDto(saved);
@@ -50,12 +60,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionDto toDto(Transaction t) {
-        return TransactionDto.builder()
-                .id(t.getId())
-                .amount(t.getAmount())
-                .description(t.getDescription())
-                .categoryId(t.getCategory() != null ? t.getCategory().getId() : null)
-                .userId(t.getUser() != null ? t.getUser().getId() : null)
-                .build();
+        return new TransactionDto(
+                t.getId(),
+                t.getAmount(),
+                t.getDescription(),
+                t.getCategory() != null ? t.getCategory().getId() : null,
+                t.getUser() != null ? t.getUser().getId() : null
+        );
     }
 }

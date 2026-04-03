@@ -8,10 +8,6 @@ public final class UserMapper {
 
     public static UserDto toDto(User u) {
         if (u == null) return null;
-        return UserDto.builder()
-                .id(u.getId())
-                .username(u.getUsername())
-                .fullName(u.getFullName())
-                .build();
+        return new UserDto(u.getId(), u.getUsername(), u.getFullName());
     }
 }

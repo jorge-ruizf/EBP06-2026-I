@@ -5,6 +5,7 @@ import com.tuapp.finanzas.user.dto.UserDto;
 import com.tuapp.finanzas.user.entity.User;
 import com.tuapp.finanzas.user.repository.UserRepository;
 import com.tuapp.finanzas.user.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,18 +15,19 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDto create(CreateUserRequest req) {
-        User u = User.builder()
-                .username(req.getUsername())
-                .password(req.getPassword())
-                .fullName(req.getFullName())
-                .build();
+        User u = new User();
+        u.setUsername(req.getUsername());
+        u.setPassword(passwordEncoder.encode(req.getPassword()));
+        u.setFullName(req.getFullName());
         User saved = userRepository.save(u);
         return toDto(saved);
     }
@@ -41,10 +43,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserDto toDto(User u) {
-        return UserDto.builder()
-                .id(u.getId())
-                .username(u.getUsername())
-                .fullName(u.getFullName())
-                .build();
+        return new UserDto(u.getId(), u.getUsername(), u.getFullName());
     }
 }

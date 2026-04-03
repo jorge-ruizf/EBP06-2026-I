@@ -20,7 +20,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto create(CategoryDto dto) {
-        Category c = Category.builder().name(dto.getName()).build();
+        Category c = new Category();
+        c.setName(dto.getName());
         Category saved = categoryRepository.save(c);
         return toDto(saved);
     }
@@ -36,6 +37,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private CategoryDto toDto(Category c) {
-        return CategoryDto.builder().id(c.getId()).name(c.getName()).build();
+        return new CategoryDto(c.getId(), c.getName());
     }
 }

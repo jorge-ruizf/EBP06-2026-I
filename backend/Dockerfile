@@ -1,11 +1,13 @@
-# Imagen con Java
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17-jdk AS build
+WORKDIR /workspace
 
-# Carpeta de trabajo
+COPY . .
+RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
+
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-# Copiar el jar
-COPY target/*.jar app.jar
+COPY --from=build /workspace/build/libs/*.jar app.jar
 
-# Ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
