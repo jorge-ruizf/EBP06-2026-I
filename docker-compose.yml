@@ -1,38 +1,31 @@
 services:
   db:
     image: postgres:15
-    container_name: EBP06_db
-
+    container_name: ebp06_db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: ebp06
-
     ports:
       - "5432:5432"
-
     volumes:
-      - ebp06_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
   backend:
     build: ./backend
-    container_name: EBP06_backend
-
+    container_name: ebp06_backend
     ports:
       - "8080:8080"
-
     depends_on:
       - db
 
   frontend:
     build: ./frontend
-    container_name: EBP06_frontend
-
+    container_name: ebp06_frontend
     ports:
-      - "3000:3000"
-
+      - "5173:5173"
     depends_on:
       - backend
 
 volumes:
-  ebp06_data:
+  postgres_data:

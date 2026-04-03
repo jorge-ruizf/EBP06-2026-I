@@ -1,13 +1,13 @@
-FROM eclipse-temurin:17-jdk AS build
-WORKDIR /workspace
-
-COPY . .
-RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
-
-FROM eclipse-temurin:17-jre
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
-COPY --from=build /workspace/build/libs/*.jar app.jar
+COPY . .
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
