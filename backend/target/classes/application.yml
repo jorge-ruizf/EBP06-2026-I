@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://db:5432/ebp06
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+jwt:
+  # For dev only. Override with env var JWT_SECRET in production.
+  secret: ${JWT_SECRET:dev-very-secret-key-change-me-please-dev-very-secret-key}
+  expiration-ms: 3600000 # 1 hour
