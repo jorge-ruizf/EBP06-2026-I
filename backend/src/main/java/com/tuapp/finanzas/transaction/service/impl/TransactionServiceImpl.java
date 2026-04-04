@@ -28,6 +28,12 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDto create(TransactionDto dto) {
         Transaction t = new Transaction();
         t.setAmount(dto.getAmount());
+        // set date explicitly: JPA may include a null date in INSERT which prevents DB default from applying
+        if (dto.getDate() != null) {
+            t.setDate(dto.getDate());
+        } else {
+            t.setDate(java.time.OffsetDateTime.now());
+        }
         t.setDescription(dto.getDescription());
         if (dto.getCategoryId() != null) {
             Category c = new Category();
@@ -60,12 +66,14 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionDto toDto(Transaction t) {
-        return new TransactionDto(
+        TransactionDto dto = new TransactionDto(
                 t.getId(),
                 t.getAmount(),
                 t.getDescription(),
                 t.getCategory() != null ? t.getCategory().getId() : null,
                 t.getUser() != null ? t.getUser().getId() : null
         );
+        dto.setDate(t.getDate());
+        return dto;
     }
 }

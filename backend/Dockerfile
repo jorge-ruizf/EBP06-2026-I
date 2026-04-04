@@ -1,13 +1,20 @@
-FROM eclipse-temurin:17-jdk AS build
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 WORKDIR /workspace
 
-COPY . .
-RUN chmod +x gradlew && ./gradlew bootJar --no-daemon
+# Copy only the pom first to leverage Docker cache for dependencies
+# We use the official maven image so the mvnw wrapper is not required.
+COPY pom.xml ./
+RUN mvn -B -q dependency:go-offline
+
+# Copy the source and build
+COPY src ./src
+RUN mvn -B -q package -DskipTests
 
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 
-COPY --from=build /workspace/build/libs/*.jar app.jar
+# Copy the jar produced by Maven
+COPY --from=build /workspace/target/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

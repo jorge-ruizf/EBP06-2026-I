@@ -16,6 +16,9 @@ public class Transaction {
     @Column(nullable = false)
     private java.math.BigDecimal amount;
 
+    @Column(name = "date", nullable = false)
+    private java.time.OffsetDateTime date;
+
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,12 +31,13 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(Long id, java.math.BigDecimal amount, String description, Category category, User user) {
+    public Transaction(Long id, java.math.BigDecimal amount, String description, Category category, User user, java.time.OffsetDateTime date) {
         this.id = id;
         this.amount = amount;
         this.description = description;
         this.category = category;
         this.user = user;
+        this.date = date;
     }
 
     public Long getId() {
@@ -50,6 +54,14 @@ public class Transaction {
 
     public void setAmount(java.math.BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public java.time.OffsetDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(java.time.OffsetDateTime date) {
+        this.date = date;
     }
 
     public String getDescription() {

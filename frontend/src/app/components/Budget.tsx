@@ -68,7 +68,7 @@ export function Budget({ onBack }: BudgetProps) {
 
       const rawNumber = amount.replace(/\./g, '');
       const numericAmount = parseFloat(rawNumber || '0');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      const API_URL = import.meta.env.VITE_API_URL ?? '';
       (async () => {
         try {
           const res = await fetch(`${API_URL}/api/budgets`, {

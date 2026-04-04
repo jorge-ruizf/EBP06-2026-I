@@ -34,8 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const register = async (name: string, email: string, password: string) => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const register = async (name: string, email: string, password: string) => {
+    // Use nullish coalescing so an explicit empty VITE_API_URL becomes a valid
+    // value (we use '' to indicate relative paths, proxied by nginx)
+    const API_URL = import.meta.env.VITE_API_URL ?? '';
     try {
       const res = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
@@ -57,8 +59,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const login = async (email: string, password: string) => {
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const login = async (email: string, password: string) => {
+    const API_URL = import.meta.env.VITE_API_URL ?? '';
     try {
       const res = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
