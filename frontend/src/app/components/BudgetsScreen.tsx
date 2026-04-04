@@ -51,7 +51,7 @@ export function BudgetsScreen({ onNavigate, onCreateBudget }: BudgetsScreenProps
   useEffect(() => {
     const load = async () => {
       if (!user) return setBudgets([]);
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+      const API_URL = import.meta.env.VITE_API_URL ?? '';
       try {
         const res = await fetch(`${API_URL}/api/budgets`, {
           headers: {

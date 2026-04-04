@@ -1,13 +1,20 @@
-FROM maven:3.9-eclipse-temurin-21 AS build
-WORKDIR /app
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+WORKDIR /workspace
 
-COPY . .
-RUN mvn clean package -DskipTests
+# Copy only the pom first to leverage Docker cache for dependencies
+# We use the official maven image so the mvnw wrapper is not required.
+COPY pom.xml ./
+RUN mvn -B -q dependency:go-offline
+
+# Copy the source and build
+COPY src ./src
+RUN mvn -B -q package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+# Copy the jar produced by Maven
+COPY --from=build /workspace/target/*.jar app.jar
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -3,6 +3,7 @@ package com.tuapp.finanzas.transaction.dto;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 public class TransactionDto {
     private Long id;
@@ -14,6 +15,7 @@ public class TransactionDto {
     private String description;
     private Long categoryId;
     private Long userId;
+    private OffsetDateTime date;
 
     public TransactionDto() {}
 
@@ -23,6 +25,14 @@ public class TransactionDto {
         this.description = description;
         this.categoryId = categoryId;
         this.userId = userId;
+    }
+
+    public OffsetDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(OffsetDateTime date) {
+        this.date = date;
     }
 
     public Long getId() {

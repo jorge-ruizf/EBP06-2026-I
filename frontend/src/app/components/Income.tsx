@@ -77,17 +77,18 @@ export function Income({ onBack }: IncomeProps) {
       const rawNumber = amount.replace(/\./g, '');
       const numericAmount = parseFloat(rawNumber || '0');
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-      try {
-        const res = await fetch(`${API_URL}/api/transactions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {})
-          },
-          body: JSON.stringify({
+      const API_URL = import.meta.env.VITE_API_URL ?? '';
+        try {
+          const res = await fetch(`${API_URL}/api/transactions`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(token ? { Authorization: `Bearer ${token}` } : {})
+            },
+            body: JSON.stringify({
             amount: numericAmount,
             description,
+            date: new Date().toISOString(),
             // categoryId expected as numeric on backend; frontend categories are string ids so we omit it
           })
         });

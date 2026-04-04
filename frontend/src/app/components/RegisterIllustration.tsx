@@ -157,12 +157,9 @@ export function RegisterIllustration() {
           strokeWidth="6"
           strokeLinecap="round"
           fill="none"
+          // Animate vertical position via transform instead of morphing the path 'd'
           animate={{
-            d: [
-              'M80 115 Q95 105 100 75',
-              'M80 115 Q95 102 102 72',
-              'M80 115 Q95 105 100 75',
-            ],
+            y: [0, -8, 0],
           }}
           transition={{
             duration: 2,
@@ -177,8 +174,9 @@ export function RegisterIllustration() {
           cy="75"
           r="5"
           fill="#FFDDB3"
+          // Animate using translateY (y) instead of setting 'cy' attribute to avoid potential undefined frames
           animate={{
-            cy: [75, 72, 75],
+            y: [0, -3, 0],
           }}
           transition={{
             duration: 2,
