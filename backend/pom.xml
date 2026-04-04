@@ -77,6 +77,10 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+        </dependency>
 
         <!-- Lombok removed: replaced with explicit POJOs to avoid annotation processing issues -->
 
