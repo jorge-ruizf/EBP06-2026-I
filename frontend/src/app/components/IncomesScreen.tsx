@@ -36,7 +36,7 @@ interface Income {
 }
 
 interface IncomesScreenProps {
-  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'achievements') => void;
+  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'reports' | 'achievements') => void;
   onCreateIncome: () => void;
   onProfileClick: () => void;
 }

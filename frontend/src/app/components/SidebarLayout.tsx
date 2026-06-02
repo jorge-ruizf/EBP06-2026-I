@@ -1,8 +1,8 @@
-import { Home, FileText, DollarSign, TrendingDown, LogOut, Trophy } from 'lucide-react';
+import { Home, FileText, DollarSign, TrendingDown, LogOut, Trophy, BarChart2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { NotificationBell } from './NotificationBell';
 
-type AppPage = 'home' | 'budgets' | 'incomes' | 'expenses' | 'achievements';
+type AppPage = 'home' | 'budgets' | 'incomes' | 'expenses' | 'reports' | 'achievements';
 
 interface SidebarLayoutProps {
   children: React.ReactNode;
@@ -96,6 +96,17 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
               <span className="text-[17px]">Gastos</span>
             </button>
             <button
+              onClick={() => onNavigate('reports')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                currentPage === 'reports'
+                  ? 'bg-[#FFD200] text-black'
+                  : 'text-white/70 hover:bg-white/10'
+              }`}
+            >
+              <BarChart2 className="w-5 h-5" />
+              <span className="text-[17px]">Reportes</span>
+            </button>
+            <button
               onClick={() => onNavigate('achievements')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                 currentPage === 'achievements'
@@ -127,11 +138,11 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#4c1d95] border-t border-purple-700/30 p-4 xl:hidden z-40">
-        <div className="w-full max-w-md mx-auto flex gap-2">
+      <div className="fixed bottom-0 left-0 right-0 bg-[#4c1d95] border-t border-purple-700/30 p-3 xl:hidden z-40">
+        <div className="w-full max-w-md mx-auto flex gap-2 overflow-x-auto">
           <button
             onClick={() => onNavigate('home')}
-            className={`flex-1 flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
+            className={`min-w-[68px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
               currentPage === 'home'
                 ? 'bg-[#FFD200] text-black'
                 : 'text-white/70'
@@ -142,7 +153,7 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
           </button>
           <button
             onClick={() => onNavigate('budgets')}
-            className={`flex-1 flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
+            className={`min-w-[82px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
               currentPage === 'budgets'
                 ? 'bg-[#FFD200] text-black'
                 : 'text-white/70'
@@ -153,7 +164,7 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
           </button>
           <button
             onClick={() => onNavigate('incomes')}
-            className={`flex-1 flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
+            className={`min-w-[68px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
               currentPage === 'incomes'
                 ? 'bg-[#FFD200] text-black'
                 : 'text-white/70'
@@ -164,7 +175,7 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
           </button>
           <button
             onClick={() => onNavigate('expenses')}
-            className={`flex-1 flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
+            className={`min-w-[68px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
               currentPage === 'expenses'
                 ? 'bg-[#FFD200] text-black'
                 : 'text-white/70'
@@ -174,8 +185,19 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
             <span className="text-xs">Gastos</span>
           </button>
           <button
+            onClick={() => onNavigate('reports')}
+            className={`min-w-[68px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
+              currentPage === 'reports'
+                ? 'bg-[#FFD200] text-black'
+                : 'text-white/70'
+            }`}
+          >
+            <BarChart2 className="w-5 h-5" />
+            <span className="text-xs">Reportes</span>
+          </button>
+          <button
             onClick={() => onNavigate('achievements')}
-            className={`flex-1 flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
+            className={`min-w-[68px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors min-h-[44px] justify-center ${
               currentPage === 'achievements'
                 ? 'bg-[#FFD200] text-black'
                 : 'text-white/70'
@@ -186,7 +208,7 @@ export function SidebarLayout({ children, currentPage, onNavigate, onProfileClic
           </button>
           <button
             onClick={logout}
-            className="flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors text-white/70 hover:bg-white/10 min-h-[44px] justify-center"
+            className="min-w-[58px] flex flex-col items-center gap-1 px-2 py-2 rounded-xl transition-colors text-white/70 hover:bg-white/10 min-h-[44px] justify-center"
           >
             <LogOut className="w-5 h-5" />
             <span className="text-xs">Salir</span>

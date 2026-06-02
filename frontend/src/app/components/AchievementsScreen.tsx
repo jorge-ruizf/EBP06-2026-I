@@ -4,7 +4,7 @@ import { SidebarLayout } from './SidebarLayout';
 import { achievementService, Achievement } from '../api/achievementService';
 
 interface AchievementsScreenProps {
-  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'achievements') => void;
+  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'reports' | 'achievements') => void;
   onProfileClick: () => void;
 }
 

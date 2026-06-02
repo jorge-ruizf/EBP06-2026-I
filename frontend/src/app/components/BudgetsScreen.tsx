@@ -44,7 +44,7 @@ interface Budget {
 }
 
 interface BudgetsScreenProps {
-  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'achievements') => void;
+  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'reports' | 'achievements') => void;
   onCreateBudget: () => void;
   onProfileClick: () => void;
 }
