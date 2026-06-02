@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+const fallbackApiUrl = import.meta.env.PROD
+  ? 'https://ebp06-2026-i-production.up.railway.app'
+  : 'http://localhost:8080';
+
+const apiUrl = (import.meta.env.VITE_API_URL || fallbackApiUrl).replace(/\/+$/, '');
+
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api`,
+  baseURL: `${apiUrl}/api`,
   headers: { 'Content-Type': 'application/json' },
 });
 
