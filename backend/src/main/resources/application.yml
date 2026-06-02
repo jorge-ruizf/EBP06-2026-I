@@ -11,7 +11,7 @@ spring:
       ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:update}
     show-sql: ${SPRING_JPA_SHOW_SQL:true}
     database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.H2Dialect}
-    defer-datasource-initialization: true
+    defer-datasource-initialization: ${SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION:false}
   flyway:
     enabled: ${FLYWAY_ENABLED:false}
   sql:
