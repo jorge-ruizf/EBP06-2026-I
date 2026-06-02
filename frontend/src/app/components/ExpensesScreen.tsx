@@ -38,7 +38,7 @@ interface Expense {
 }
 
 interface ExpensesScreenProps {
-  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses') => void;
+  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'achievements') => void;
   onCreateExpense: () => void;
   onProfileClick: () => void;
 }

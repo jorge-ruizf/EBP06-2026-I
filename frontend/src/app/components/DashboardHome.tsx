@@ -40,7 +40,7 @@ interface Transaction {
 }
 
 interface DashboardHomeProps {
-  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses') => void;
+  onNavigate: (page: 'home' | 'budgets' | 'incomes' | 'expenses' | 'achievements') => void;
   onCreateBudget: () => void;
   onCreateIncome: () => void;
   onCreateExpense: () => void;

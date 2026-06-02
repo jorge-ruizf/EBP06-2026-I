@@ -150,42 +150,28 @@ export function RegisterIllustration() {
           fill="none"
         />
 
-        {/* Right arm - raised up (taking action) */}
-        <motion.path
-          d="M80 115 Q95 105 100 75"
-          stroke="#FFDDB3"
-          strokeWidth="6"
-          strokeLinecap="round"
-          fill="none"
+        <motion.g
           animate={{
-            d: [
-              'M80 115 Q95 105 100 75',
-              'M80 115 Q95 102 102 72',
-              'M80 115 Q95 105 100 75',
-            ],
+            y: [0, -3, 0],
           }}
           transition={{
             duration: 2,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-        />
+        >
+          {/* Right arm - raised up (taking action) */}
+          <path
+            d="M80 115 Q95 105 100 75"
+            stroke="#FFDDB3"
+            strokeWidth="6"
+            strokeLinecap="round"
+            fill="none"
+          />
 
-        {/* Hand pointing up */}
-        <motion.circle
-          cx="100"
-          cy="75"
-          r="5"
-          fill="#FFDDB3"
-          animate={{
-            cy: [75, 72, 75],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
+          {/* Hand pointing up */}
+          <circle cx="100" cy="75" r="5" fill="#FFDDB3" />
+        </motion.g>
       </motion.g>
 
       {/* Success sparkles */}

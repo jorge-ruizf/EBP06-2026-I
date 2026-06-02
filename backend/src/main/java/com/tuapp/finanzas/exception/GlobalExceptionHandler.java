@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,22 @@ public class GlobalExceptionHandler {
         Map<String, String> e = new HashMap<>();
         e.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Map<String, String>> handleNoResourceFound(NoResourceFoundException ex) {
+        logger.warn("Resource not found: {}", ex.getResourcePath());
+        Map<String, String> e = new HashMap<>();
+        e.put("error", "Resource not found");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, String>> handleResponseStatus(ResponseStatusException ex) {
+        logger.warn("Request failed with status {}: {}", ex.getStatusCode(), ex.getReason());
+        Map<String, String> e = new HashMap<>();
+        e.put("error", ex.getReason());
+        return ResponseEntity.status(ex.getStatusCode()).body(e);
     }
 
     @ExceptionHandler(Exception.class)

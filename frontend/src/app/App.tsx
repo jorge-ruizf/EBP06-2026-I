@@ -12,8 +12,9 @@ import { DashboardHome } from './components/DashboardHome';
 import { BudgetsScreen } from './components/BudgetsScreen';
 import { IncomesScreen } from './components/IncomesScreen';
 import { ExpensesScreen } from './components/ExpensesScreen';
+import { AchievementsScreen } from './components/AchievementsScreen';
 
-type AppView = 'onboarding' | 'login' | 'register' | 'dashboard-home' | 'budgets' | 'incomes' | 'expenses' | 'create-budget' | 'create-income' | 'create-expense' | 'profile';
+type AppView = 'onboarding' | 'login' | 'register' | 'dashboard-home' | 'budgets' | 'incomes' | 'expenses' | 'achievements' | 'create-budget' | 'create-income' | 'create-expense' | 'profile';
 
 function AppContent() {
   const { user, isLoading } = useAuth();
@@ -90,6 +91,14 @@ function AppContent() {
           key={`expenses-${refreshKey}`}
           onNavigate={(page) => setCurrentView(page === 'home' ? 'dashboard-home' : page)}
           onCreateExpense={() => setCurrentView('create-expense')}
+          onProfileClick={() => setCurrentView('profile')}
+        />
+      );
+
+    case 'achievements':
+      return (
+        <AchievementsScreen
+          onNavigate={(page) => setCurrentView(page === 'home' ? 'dashboard-home' : page)}
           onProfileClick={() => setCurrentView('profile')}
         />
       );
