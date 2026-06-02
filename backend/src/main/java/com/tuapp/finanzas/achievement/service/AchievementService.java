@@ -13,9 +13,11 @@ import com.tuapp.finanzas.user.repository.UserRepository;
 import com.tuapp.finanzas.user.service.UserLookup;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -74,15 +76,16 @@ public class AchievementService {
 
         // Valida que el logro exista en el catálogo
         Achievement achievement = achievementRepository.findById(achievementId)
-                .orElseThrow(() -> new RuntimeException("Logro no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Logro no encontrado"));
 
         // Valida que el usuario realmente lo haya desbloqueado
         boolean unlocked = userAchievementRepository
                 .existsByUserIdAndAchievementId(user.getId(), achievement.getId());
 
         if (!unlocked) {
-            throw new RuntimeException(
-                "No puedes seleccionar un logro que no has desbloqueado todavía");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "No puedes seleccionar un logro que no has desbloqueado todavía");
         }
 
         user.setActiveAchievementId(achievementId);
